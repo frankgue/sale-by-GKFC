@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\ContactRequest;
 use App\Mail\ContactMessageCreated;
@@ -10,7 +12,7 @@ use App\Models\Message;
 
 
 
-class ContactController extends Controller
+class ContactController extends Controller implements ShouldQueue
 {
     public function create()
     {
@@ -26,7 +28,8 @@ class ContactController extends Controller
         //$message->save();
 
         Mail::to(config('saleby.admin_support_email'))
-            ->queue(new ContactMessageCreated($message));
+            ->send(new ContactMessageCreated($message));
+            //->queue(new ContactMessageCreated($message));
 
         flashy('Nous vous repondrons dans les plus brefs dalis.');
 
