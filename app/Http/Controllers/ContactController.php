@@ -25,8 +25,8 @@ class ContactController extends Controller
 
         //$message->save();
 
-        $mailable = new ContactMessageCreated($message);
-        Mail::to(config('saleby.admin_support_email'))->send($mailable);
+        Mail::to(config('saleby.admin_support_email'))
+            ->queue(new ContactMessageCreated($message));
 
         flashy('Nous vous repondrons dans les plus brefs dalis.');
 
